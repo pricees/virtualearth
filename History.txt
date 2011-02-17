@@ -1,3 +1,6 @@
+=== 0.1.4 / 2011-02-17
+* Placed the DisplayLayers as the first child under Options in the Imagery soap envelope
+
 === 0.1.3 / 2009-12-14
 * Changed request parameter order of GetMapUri to work around MS bug
 

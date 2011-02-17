@@ -4,7 +4,7 @@ module VirtualEarth
              'http://dev.virtualearth.net/webservices/v1/imageryservice/imageryservice.svc',
              :version => 1)
     IMAGERY_URL = "http://dev.virtualearth.net/webservices/v1/imagery/contracts/IImageryService/"
-    
+
     def get_map_uri(ve_token,opts={})
       resp = ve_invoke('GetMapUri') do |msg|
         msg.add('con:request') do |req|
@@ -18,6 +18,11 @@ module VirtualEarth
           end
 
           req.add('imag:Options') do |io|
+            if opts[:layers]
+              io.add('imag:DisplayLayers') do |dl|
+                opts[:layers].each{|layer| dl.add('arr:string', layer) }
+              end
+            end
             if opts[:height] && opts[:width]
               io.add('imag:ImageSize') do |is|
                 is.add('com:Height', opts[:height])
@@ -30,11 +35,6 @@ module VirtualEarth
 
             # VE bug requires ZoomLevel to come after Style
             io.add('imag:ZoomLevel', opts[:zoom]) if opts[:zoom]
-            if opts[:layers]
-              io.add('imag:DisplayLayers') do |dl|
-                opts[:layers].each{|layer| dl.add('arr:string', layer) }
-              end
-            end
           end
 
           add_pushpins(req, opts[:pushpins])
